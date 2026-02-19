@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRAWORLD | 25 Aesthetic Wonders</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #f5f5f5;
+    color: #222;
+}
+
+.page {
+    display: none;
+    padding: 60px 20px 120px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.active {
+    display: block;
+}
+
+h1 {
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 40px;
+}
+
+nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: white;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 15px 0;
+    border-top: 1px solid #ddd;
+}
+
+nav button {
+    background: none;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    color: #555;
+}
+
+nav button:hover {
+    color: black;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.btn {
+    background: black;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #333;
+}
+
+.vibe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.vibe-box {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 30px;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.vibe-box:hover {
+    background: #f0f0f0;
+}
+
+.blog-item {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background: white;
+    margin-bottom: 20px;
+}
+
+.route-info {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fafafa;
+    display: none;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <button onclick="showPage('page1')">IDENTIFY</button>
+    <button onclick="showPage('page2')">THE VIBE</button>
+    <button onclick="showPage('page3')">THE BOX</button>
+    <button onclick="showPage('page4')">NAVIGATE</button>
+</nav>
+
+<div id="page1" class="page active">
+    <h1>Traworld</h1>
+    <div class="card">
+        <label>Full Name</label>
+        <input type="text" id="p1-name" placeholder="John Doe">
+
+        <label>Email Address</label>
+        <input type="email" id="p1-email" placeholder="john@traworld.com">
+
+        <button class="btn" onclick="saveGo()">ENTER ARCHIVE</button>
+    </div>
+</div>
+
+<div id="page2" class="page">
+    <h1>Choose Essence</h1>
+    <div class="vibe-grid">
+        <div class="vibe-box" onclick="loadBlogs('Aura')">Golden Aura</div>
+        <div class="vibe-box" onclick="loadBlogs('Ether')">Ethereal Blue</div>
+        <div class="vibe-box" onclick="loadBlogs('Primal')">Primal Roots</div>
+        <div class="vibe-box" onclick="loadBlogs('Vivid')">Vivid Dreams</div>
+    </div>
+</div>
+
+<div id="page3" class="page">
+    <div id="blogList"></div>
+</div>
+
+<div id="page4" class="page">
+    <div class="card">
+        <h2>Nav Command</h2>
+        <div id="status" style="margin-bottom: 20px; color: #666;">
+            Ready for departure...
+        </div>
+
+        <input type="text" id="startP" placeholder="Current Location (e.g. Mumbai)">
+        <input type="text" id="endP" placeholder="Destination (e.g. Jaipur)">
+        <button class="btn" onclick="generateRoute()">GENERATE LIVE ROUTE</button>
+
+        <div id="route-box" class="route-info">
+            <p id="route-details"></p>
+            <a id="maps-link" href="#" target="_blank" class="btn" style="display:block;margin-top:10px;text-align:center;text-decoration:none;">
+                OPEN IN GOOGLE MAPS
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+const travelDB = [
+{ name: "Kyoto, Japan", vibe: "Ether", img: "", curr: "JPY", cost: "$150", weather: "Cherry Blossom", guide: "Visit the Fushimi Inari shrine at dawn. The rail pass is essential.", food: "Matcha & Ramen" },
+{ name: "Zermatt, Swiss", vibe: "Ether", img: "", curr: "CHF", cost: "$400", weather: "Snowy", guide: "Completely car-free zone. Take the mountain trains for the best views.", food: "Cheese Fondue" },
+{ name: "Santorini, Greece", vibe: "Ether", img: "", curr: "EUR", cost: "$250", weather: "Sunny", guide: "Rent an ATV to explore the hidden cliffs of Oia and Fira.", food: "Fresh Octopus" },
+
+{ name: "Jaipur, India", vibe: "Aura", img: "", curr: "INR", cost: "₹5000", weather: "Dry", guide: "The Pink City is best seen via rickshaw. Hawa Mahal is iconic.", food: "Dal Baati Churma" },
+{ name: "Udaipur, India", vibe: "Aura", img: "", curr: "INR", cost: "₹7000", weather: "Lakeside", guide: "Take a boat ride at Lake Pichola during sunset for magic.", food: "Laal Maas" },
+{ name: "Varanasi, India", vibe: "Aura", img: "", curr: "INR", cost: "₹3000", weather: "Mystic", guide: "Watch the Ganga Aarti from a boat for the best perspective.", food: "Kachori Sabzi" },
+
+{ name: "Bali, Indonesia", vibe: "Primal", img: "", curr: "IDR", cost: "$60", weather: "Tropical", guide: "Respect temple dress codes. Rent a scooter for rice terrace views.", food: "Nasi Goreng" },
+{ name: "Hampi, India", vibe: "Primal", img: "", curr: "INR", cost: "₹2500", weather: "Sunny", guide: "Rent a bicycle to explore the ancient ruins across the landscape.", food: "Mango Tree Thali" },
+{ name: "Ladakh, India", vibe: "Primal", img: "", curr: "INR", cost: "₹6000", weather: "Cold", guide: "Acclimatize for 48 hours to avoid altitude sickness.", food: "Thukpa & Momos" },
+
+{ name: "Paris, France", vibe: "Vivid", img: "", curr: "EUR", cost: "$200", weather: "Romantic", guide: "Use the Metro. Book Eiffel Tower tickets months ahead.", food: "Ratatouille" },
+{ name: "New York, USA", vibe: "Vivid", img: "", curr: "USD", cost: "$350", weather: "Energetic", guide: "Walk the High Line for a unique urban garden experience.", food: "NY Style Pizza" },
+{ name: "Dubai, UAE", vibe: "Vivid", img: "", curr: "AED", cost: "$300", weather: "Hot", guide: "Visit the Burj Khalifa at night to see the fountain show.", food: "Shawarma" },
+{ name: "Seoul, Korea", vibe: "Vivid", img: "", curr: "KRW", cost: "$120", weather: "Techy", guide: "Get a T-money card for seamless travel on all public transport.", food: "Korean BBQ" }
+];
+
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function saveGo() {
+    const user = { name: document.getElementById('p1-name').value };
+    localStorage.setItem('tra_user', JSON.stringify(user));
+    showPage('page2');
+}
+
+function loadBlogs(vibe) {
+    const list = document.getElementById('blogList');
+    list.innerHTML = `<h1>${vibe} Archive</h1>`;
+
+    travelDB.filter(p => p.vibe === vibe).forEach(p => {
+        list.innerHTML += `
+            <div class="blog-item">
+                <h3>${p.name}</h3>
+                <p><b>Weather:</b> ${p.weather}</p>
+                <p><b>Travel Tip:</b> ${p.guide}</p>
+                <p><b>Eat:</b> ${p.food}</p>
+                <button class="btn" onclick="setDest('${p.name}')">NAVIGATE →</button>
+            </div>`;
+    });
+
+    showPage('page3');
+}
+
+function setDest(name) {
+    document.getElementById('endP').value = name;
+    showPage('page4');
+}
+
+function generateRoute() {
+    const start = document.getElementById('startP').value;
+    const end = document.getElementById('endP').value;
+
+    if (!start || !end) {
+        alert("Both points are needed to chart the course.");
+        return;
+    }
+
+    const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(start)}&destination=${encodeURIComponent(end)}&travelmode=driving`;
+
+    document.getElementById('status').innerText = "Path discovered.";
+    document.getElementById('route-details').innerHTML = `<b>Route Optimized:</b> From ${start} to ${end}.`;
+    document.getElementById('maps-link').href = mapsUrl;
+    document.getElementById('route-box').style.display = "block";
+}
+</script>
+
+</body>
+</html>
